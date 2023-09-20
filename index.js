@@ -4,6 +4,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const http = require("http");
+const cookieParser = require("cookie-parser");
 const { Server } = require("socket.io");
 
 const AuthRouter = require("./Routes/Authentication");
@@ -12,7 +13,13 @@ const ConversationRouter = require("./Routes/Conversation");
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:3000"],
+    credentials: true,
+  })
+);
+app.use(cookieParser());
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -20,6 +27,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", AuthRouter);
 app.use("/api/user", UserRouter);
 app.use("/api/conversation", ConversationRouter);
+
+// Test endpoint
+app.get("/api/test", (req, res) => {
+  res.status(200).send("API is up and running!");
+});
 
 app.use("*", (req, res) => {
   return res.status(404).json({ msg: "Endpoint not found" });

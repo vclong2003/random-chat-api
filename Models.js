@@ -1,21 +1,21 @@
-const { string } = require("@withvoid/make-validation/lib/validationTypes");
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
   username: String,
   phone: String,
+  email: String,
   password: String,
   dob: Date,
   avatarUrl: String,
+  followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 });
-const User = mongoose.model("User", userSchema);
 
 const refreshTokenSchema = new Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   token: String,
 });
-const RefreshToken = mongoose.model("RefreshToken", refreshTokenSchema);
 
 const postSchema = new Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
@@ -35,7 +35,6 @@ const postSchema = new Schema({
   ],
   likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 });
-const Post = mongoose.model("Post", postSchema);
 
 const conversationSchema = new Schema({
   partticipants: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
@@ -47,6 +46,10 @@ const conversationSchema = new Schema({
     },
   ],
 });
+
+const User = mongoose.model("User", userSchema);
+const RefreshToken = mongoose.model("RefreshToken", refreshTokenSchema);
+const Post = mongoose.model("Post", postSchema);
 const Conversation = mongoose.model("Conversation", conversationSchema);
 
-module.exports = { User, RefreshToken, Conversation };
+module.exports = { User, RefreshToken, Post, Conversation };
