@@ -38,4 +38,39 @@ router.put("/:userId/username", verifyToken, async (req, res) => {
   return res.sendStatus(200);
 });
 
+// Follow a user
+router.post("/:followId/follow", verifyToken, async (req, res) => {
+  const { followId } = req.params;
+  const { userId } = req;
+
+  try {
+    await User.findByIdAndUpdate(followId, {
+      $addToSet: { followers: userId },
+    });
+    await User.findByIdAndUpdate(userId, {
+      $addToSet: { following: followId },
+    });
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+
+  return res.sendStatus(200);
+});
+
+// Unfollow a user
+router.delete("/:unfollowId/follow", verifyToken, async (req, res) => {
+  const { unfollowId } = req.params;
+  const { userId } = req;
+
+  try {
+    await User.findByIdAndUpdate(userId, { $pull: { following: unfollowId } });
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+
+  return res.sendStatus(200);
+});
+
 module.exports = router;
