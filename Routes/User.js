@@ -14,20 +14,20 @@ router.get("/", verifyToken, async (req, res) => {
     .json({ id: user.id, phone: user.phone, username: user.username });
 });
 
-// Find user by phone
-router.get("/:phone", verifyToken, async (req, res) => {
-  const { phone } = req.params;
+// Find user by username
+router.get("/:username", verifyToken, async (req, res) => {
+  const { username } = req.params;
 
   const users = await User.find(
-    { phone: { $regex: `${phone}` } },
-    "id phone username avatarUrl"
+    { username: { $regex: `${username}` } },
+    "id username avatarUrl"
   );
 
   return res.status(200).json(users);
 });
 
 // Update user name
-router.put("/:userId/username", verifyToken, async (req, res) => {
+router.put("/username", verifyToken, async (req, res) => {
   const { userId } = req.params;
   const { username } = req.body;
 

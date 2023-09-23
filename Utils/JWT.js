@@ -29,7 +29,7 @@ const verifyToken = (req, res, next) => {
   if (!token) return res.sendStatus(401);
 
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, data) => {
-    if (err) return res.sendStatus(403);
+    if (err) return res.sendStatus(403); // Need get a new token
 
     req.userId = data.userId;
     return next();

@@ -8,6 +8,8 @@ const userSchema = new Schema({
   password: String,
   dob: Date,
   avatarUrl: String,
+  coverUrl: String,
+  bio: String,
   followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 });
