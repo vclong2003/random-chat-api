@@ -10,10 +10,18 @@ const {
 
 const router = express.Router();
 
+// GET: /auth
+// Verify Token
+router.get("/", verifyToken, async (req, res) => {
+  return res.sendStatus(200);
+});
+
+// GET: /auth/token
 // Get Access token
 router.get("/token", async (req, res) => {
   const refreshToken = req.cookies["refreshToken"];
 
+  // Check if refresh token exists in the database
   const dbRefreshToken = await RefreshToken.findOne({ token: refreshToken });
   if (!dbRefreshToken) return res.sendStatus(401);
 
@@ -28,7 +36,7 @@ router.get("/token", async (req, res) => {
 
       return res
         .status(200)
-        .json({ access_token: generateAccessToken(data.userId) });
+        .json({ accessToken: generateAccessToken(data.userId) });
     }
   );
 });
@@ -45,10 +53,7 @@ router.post("/login", async (req, res) => {
   if (passwordFlag) {
     return res
       .cookie("refreshToken", await generateRefreshToken(existingUser.id))
-      .status(200)
-      .json({
-        accessToken: generateAccessToken(existingUser.id),
-      });
+      .status(200);
   }
 
   return res.sendStatus(403);
