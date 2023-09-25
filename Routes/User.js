@@ -9,9 +9,7 @@ const router = express.Router();
 router.get("/", verifyToken, async (req, res) => {
   const user = await User.findById(req.userId);
 
-  return res
-    .status(200)
-    .json({ id: user.id, phone: user.phone, username: user.username });
+  return res.status(200).json({ id: user.id, username: user.username });
 });
 
 // Find user by username

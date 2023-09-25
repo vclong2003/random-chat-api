@@ -2,12 +2,16 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { User, RefreshToken } = require("../Models");
-const { generateAccessToken, generateRefreshToken } = require("../Utils/JWT");
+const {
+  generateAccessToken,
+  generateRefreshToken,
+  verifyToken,
+} = require("../Utils/JWT");
 
 const router = express.Router();
 
 // Get Access token
-router.post("/token", async (req, res) => {
+router.get("/token", async (req, res) => {
   const refreshToken = req.cookies["refreshToken"];
 
   const dbRefreshToken = await RefreshToken.findOne({ token: refreshToken });
