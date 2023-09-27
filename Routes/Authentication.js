@@ -53,7 +53,7 @@ router.post("/login", async (req, res) => {
   if (passwordFlag) {
     return res
       .cookie("refreshToken", await generateRefreshToken(existingUser.id))
-      .status(200);
+      .sendStatus(200);
   }
 
   return res.sendStatus(403);
