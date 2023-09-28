@@ -10,6 +10,7 @@ const { Server } = require("socket.io");
 const AuthRouter = require("./Routes/Authentication");
 const UserRouter = require("./Routes/User");
 const ConversationRouter = require("./Routes/Conversation");
+const PostRouter = require("./Routes/Post");
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/auth", AuthRouter);
 app.use("/api/user", UserRouter);
+app.use("/api/post", PostRouter);
 app.use("/api/conversation", ConversationRouter);
 
 // Test endpoint

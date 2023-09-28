@@ -3,6 +3,7 @@ const router = express.Router();
 const { Post } = require("../Models");
 const { verifyToken } = require("../Utils/JWT");
 
+// GET: /post
 // Get all posts
 router.get("/", verifyToken, async (req, res) => {
   const posts = await Post.find({}).populate("user");
@@ -10,6 +11,7 @@ router.get("/", verifyToken, async (req, res) => {
   return res.status(200).json(posts);
 });
 
+// POST: /post
 // Create a post
 router.post("/", verifyToken, async (req, res) => {
   const { content } = req.body;
@@ -24,6 +26,7 @@ router.post("/", verifyToken, async (req, res) => {
   return res.status(200).json(post);
 });
 
+// DELETE: /post/:postId
 // Delete a post
 router.delete("/:postId", verifyToken, async (req, res) => {
   const { userId } = req;
@@ -39,6 +42,7 @@ router.delete("/:postId", verifyToken, async (req, res) => {
   return res.status(200);
 });
 
+// POST: /post/:postId/like
 // Like a post
 router.post("/:postId/like", verifyToken, async (req, res) => {
   const { userId } = req;
