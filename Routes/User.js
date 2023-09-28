@@ -9,15 +9,15 @@ const router = express.Router();
 router.get("/", verifyToken, async (req, res) => {
   const user = await User.findById(req.userId);
 
-  return res
-    .status(200)
-    .json({
-      id: user.id,
-      username: user.username,
-      bio: user.bio,
-      avatarUrl: user.avatarUrl,
-      coverUrl: user.coverUrl,
-    });
+  return res.status(200).json({
+    id: user.id,
+    username: user.username,
+    bio: user.bio,
+    avatarUrl: user.avatarUrl,
+    coverUrl: user.coverUrl,
+    followers: user.followers.length,
+    following: user.following.length,
+  });
 });
 
 // Find user by username
