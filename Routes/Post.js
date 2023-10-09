@@ -13,13 +13,14 @@ router.get("/", verifyToken, async (req, res) => {
 
 // POST: /post
 // Create a post
+// data = [{type: "text", content: "string, ..."}]
 router.post("/", verifyToken, async (req, res) => {
-  const { content } = req.body;
+  const { data } = req.body;
   const { userId } = req;
 
   const post = await Post.create({
     user: userId,
-    content: { type: "text", content: content }, // text only for now
+    content: [{ type: type, content: content }], // text only for now
     time: Date.now(),
   });
 
