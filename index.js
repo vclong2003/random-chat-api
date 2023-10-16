@@ -20,8 +20,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Test endpoint
-app.get("/api/test", (req, res) => {
+app.get("/", (req, res) => {
   res.status(200).send("API is up and running!");
 });
 
@@ -91,6 +90,10 @@ io.on("connection", (socket) => {
     availableRooms.push(room);
     console.log(`User disconnected ${socket.id}`);
   });
+});
+
+app.get("/", (req, res) => {
+  res.status(200).send({ users: io.sockets.adapter.sids });
 });
 
 httpServer.listen(process.env.PORT, () => {
