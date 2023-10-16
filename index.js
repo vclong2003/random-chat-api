@@ -6,6 +6,9 @@ const mongoose = require("mongoose");
 const http = require("http");
 const cookieParser = require("cookie-parser");
 const { Server } = require("socket.io");
+const { initializeApp } = require("firebase-admin/app");
+
+const firebaseApp = initializeApp();
 
 const AuthRouter = require("./Routes/Authentication");
 const UserRouter = require("./Routes/User");

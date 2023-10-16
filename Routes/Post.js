@@ -20,7 +20,7 @@ router.post("/", verifyToken, async (req, res) => {
 
   const post = await Post.create({
     user: userId,
-    content: [{ type: type, content: content }], // text only for now
+    content: data, // text only for now
     time: Date.now(),
   });
 
