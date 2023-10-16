@@ -9,12 +9,6 @@ const { v4: uuidv4 } = require("uuid");
 
 const app = express();
 
-app.use(
-  cors({
-    origin: ["http://localhost:3000", "https://vclchat.web.app"],
-    credentials: true,
-  })
-);
 app.use(cookieParser());
 app.use(morgan("dev"));
 app.use(express.json());
@@ -23,7 +17,10 @@ app.use(express.urlencoded({ extended: true }));
 const httpServer = http.createServer(app);
 
 const io = new Server(httpServer, {
-  cors: { origin: "http://localhost:3000", methods: ["GET", "POST"] },
+  cors: {
+    origin: ["http://localhost:3000", "https://vclchat.web.app"],
+    methods: ["GET", "POST"],
+  },
 });
 
 const messages = {};
