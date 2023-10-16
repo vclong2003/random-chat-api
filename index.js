@@ -85,7 +85,7 @@ io.on("connection", (socket) => {
 });
 
 app.get("/", (req, res) => {
-  res.status(200).send({ users: io.sockets.adapter.sids });
+  res.status(200).send("API is running!");
 });
 
 httpServer.listen(process.env.PORT, () => {
