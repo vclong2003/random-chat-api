@@ -34,21 +34,26 @@ const io = new Server(httpServer, {
   cors: { origin: "http://localhost:3000", methods: ["GET", "POST"] },
 });
 
+const msg = [];
+const allUsers = [];
+
 io.on("connection", (socket) => {
   console.log(`User connected ${socket.id}`);
 
-  const msg = [];
+  allUsers.push(socket);
 
   socket.on("send-message", (data) => {
     const newMsg = {
-      id: socket.id,
-      msg: data.msg,
-      time: Date.now().toLocaleString(),
+      sender: socket.id,
+      content: data.msg,
+      time: Date.now(),
     };
 
     msg.push(newMsg);
 
-    socket.emit("receive-message", { msg: msg });
+    allUsers.forEach((user) => {
+      user.emit("receive-message", msg);
+    });
   });
 
   socket.on("join", () => {
