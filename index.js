@@ -5,6 +5,7 @@ const cors = require("cors");
 const http = require("http");
 const cookieParser = require("cookie-parser");
 const { Server } = require("socket.io");
+const { v4: uuidv4 } = require("uuid");
 
 const app = express();
 
@@ -34,13 +35,44 @@ const io = new Server(httpServer, {
   cors: { origin: "http://localhost:3000", methods: ["GET", "POST"] },
 });
 
-const msg = [];
-const allUsers = [];
+const messages = {};
+const availableRooms = [];
 
 io.on("connection", (socket) => {
   console.log(`User connected ${socket.id}`);
+  let room;
 
-  allUsers.push(socket);
+  const sendWaiting = () => {
+    io.to(room).emit("waiting");
+  };
+  const sendReady = () => {
+    io.to(room).emit("ready");
+  };
+  const sendMessagesToRoom = () => {
+    io.to(room).emit("receive-message", messages[room]);
+  };
+
+  if (availableRooms.length == 0) {
+    // No rooms available
+    room = uuidv4();
+    socket.join(room);
+    availableRooms.push(room);
+
+    messages[room] = [];
+  } else {
+    // Room available
+    room = availableRooms.pop();
+    socket.join(room);
+
+    messages[room] = [];
+    sendMessagesToRoom();
+  }
+
+  if (io.sockets.adapter.rooms.get(room).size == 2) {
+    sendReady();
+  } else {
+    sendWaiting();
+  }
 
   socket.on("send-message", (data) => {
     const newMsg = {
@@ -49,15 +81,15 @@ io.on("connection", (socket) => {
       time: Date.now(),
     };
 
-    msg.push(newMsg);
+    messages[room].push(newMsg);
 
-    allUsers.forEach((user) => {
-      user.emit("receive-message", msg);
-    });
+    sendMessagesToRoom();
   });
 
-  socket.on("join", () => {
-    console.log("User want to join");
+  socket.on("disconnect", () => {
+    sendWaiting();
+    availableRooms.push(room);
+    console.log(`User disconnected ${socket.id}`);
   });
 });
 
