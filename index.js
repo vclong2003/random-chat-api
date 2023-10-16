@@ -20,14 +20,6 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => {
-  res.status(200).send("API is up and running!");
-});
-
-app.use("*", (req, res) => {
-  return res.status(404).json({ msg: "Endpoint not found" });
-});
-
 const httpServer = http.createServer(app);
 
 const io = new Server(httpServer, {
